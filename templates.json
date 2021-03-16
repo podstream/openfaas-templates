@@ -1,0 +1,20 @@
+[
+  {
+    "template": "python3",
+    "platform": "x86_64",
+    "language": "Python",
+    "source": "podstream",
+    "description": "Podstream Python 3 template",
+    "repo": "https://github.com/podstream/openfaas-templates",
+    "official": "false"
+  },
+  {
+    "template": "python3-debian",
+    "platform": "x86_64",
+    "language": "Python",
+    "source": "podstream",
+    "description": "Podstream Python 3 Debian template",
+    "repo": "https://github.com/podstream/openfaas-templates",
+    "official": "false"
+  }
+]
