@@ -1,9 +1,9 @@
-name: Stage
+name: Deploy
 
 on:
   push:
     branches:
-      - develop
+      - master
 jobs:
   func-build:
     runs-on: ubuntu-latest
@@ -26,14 +26,14 @@ jobs:
         name: Run shrinkwrap build
         uses: docker://openfaas/faas-cli:latest-root
         with:
-          args: build -f ${{ secrets.FUNCTION_NAME }}.yaml --shrinkwrap
+          args: build -f ${{ secrets.FUNCTION_NAME }}.yml --shrinkwrap
       -
         name: Login to OpenFaaS Gateway
         uses: docker://openfaas/faas-cli:latest-root
         with:
-          args: login -u ${{ secrets.OPENFAAS_STAGING_GATEWAY_USERNAME }} \
-                      -p ${{ secrets.OPENFAAS_STAGING_GATEWAY_PASSWORD }} \
-                      -g ${{ secrets.OPENFAAS_STAGING_GATEWAY }}
+          args: login -u ${{ secrets.OPENFAAS_GATEWAY_USERNAME }} \
+                      -p ${{ secrets.OPENFAAS_GATEWAY_PASSWORD }} \
+                      -g ${{ secrets.OPENFAAS_GATEWAY }}
       -
         name: Login to DockerHub
         if: success()
@@ -56,4 +56,4 @@ jobs:
         name: Deploy the function
         uses: docker://openfaas/faas-cli:latest-root
         with:
-          args: deploy -f ${{ secrets.FUNCTION_NAME }}.yaml --tag sha --gateway ${{ secrets.OPENFAAS_STAGING_GATEWAY }}
+          args: deploy -f ${{ secrets.FUNCTION_NAME }}.yml --tag sha --gateway ${{ secrets.OPENFAAS_GATEWAY }}
