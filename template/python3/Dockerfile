@@ -42,10 +42,6 @@ USER root
 
 COPY function           function
 
-# Allow any user-id for OpenShift users.
-RUN chown -R app:app ./ && \
-  chmod -R 777 /home/app/python
-
 USER app
 
 ENV fprocess="python3 index.py"
