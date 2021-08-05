@@ -10,15 +10,16 @@ def validate_hmac(message, secret, hash):
     return received_hash == created_hash
 
 
+def raise_error(status, message):
+    return {"status": status, "errors": [message]}
+
+
 def handle(event, context):
     try:
         with open("/var/openfaas/secrets/payload-secret", "r") as secret_content:
             payload_secret = secret_content.read()
     except FileNotFoundError:
-        return {
-            "status": 500,
-            "body": {"message": "Failed to read shared secret."},
-        }
+        raise_error(500, "Failed to read shared secret.")
     try:
         message = event.body.decode("UTF-8")
         message_mac = event.headers.get("Hmac")
@@ -26,20 +27,10 @@ def handle(event, context):
             return {
                 "status": 200,
                 "body": {
-                    "message": "Successfully validated. You said: " + message,
+                    "message": "HMAC validation successful. You said: " + message,
                 },
             }
         else:
-            return {
-                "status": 403,
-                "body": {
-                    "message": "HMAC validation failed.",
-                },
-            }
+            raise_error(403, "HMAC validation failed.")
     except:
-        return {
-            "status": 403,
-            "body": {
-                "message": "HMAC validation failed, unknown error.",
-            },
-        }
+        raise_error(500, "Unknown error.")
