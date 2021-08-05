@@ -4,7 +4,7 @@
     "platform": "x86_64",
     "language": "Python",
     "source": "podstream",
-    "description": "Podstream Python 3 template",
+    "description": "Podstream Alpine Python 3 template",
     "repo": "https://github.com/podstream/openfaas-templates",
     "official": "false"
   },
@@ -13,7 +13,25 @@
     "platform": "x86_64",
     "language": "Python",
     "source": "podstream",
-    "description": "Podstream Python 3 Debian template",
+    "description": "Podstream Debian Python 3 template",
+    "repo": "https://github.com/podstream/openfaas-templates",
+    "official": "false"
+  },
+  {
+    "template": "python3-http",
+    "platform": "x86_64",
+    "language": "Python",
+    "source": "podstream",
+    "description": "Podstream Alpine Python 3 with Flask and HTTP template",
+    "repo": "https://github.com/podstream/openfaas-templates",
+    "official": "false"
+  },
+  {
+    "template": "python3-http-debian",
+    "platform": "x86_64",
+    "language": "Python",
+    "source": "podstream",
+    "description": "Podstream Debian Python 3 with Flask and HTTP template",
     "repo": "https://github.com/podstream/openfaas-templates",
     "official": "false"
   }
