@@ -16,7 +16,7 @@ def handle(event, context):
             payload_secret = secret_content.read()
     except FileNotFoundError:
         return {
-            "statusCode": 500,
+            "status": 500,
             "body": {"message": "Failed to read shared secret."},
         }
     try:
@@ -24,21 +24,21 @@ def handle(event, context):
         message_mac = event.headers.get("Hmac")
         if validate_hmac(message, payload_secret, message_mac):
             return {
-                "statusCode": 200,
+                "status": 200,
                 "body": {
                     "message": "Successfully validated. You said: " + message,
                 },
             }
         else:
             return {
-                "statusCode": 403,
+                "status": 403,
                 "body": {
                     "message": "HMAC validation failed.",
                 },
             }
     except:
         return {
-            "statusCode": 403,
+            "status": 403,
             "body": {
                 "message": "HMAC validation failed, unknown error.",
             },

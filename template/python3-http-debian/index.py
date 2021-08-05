@@ -23,8 +23,8 @@ class Context:
 
 
 def format_status_code(res):
-    if "statusCode" in res:
-        return res["statusCode"]
+    if "status" in res:
+        return res["status"]
 
     return 200
 
@@ -65,13 +65,13 @@ def format_response(res):
     if res == None:
         return ("", 200)
 
-    statusCode = format_status_code(res)
+    status = format_status_code(res)
     content_type = get_content_type(res)
     body = format_body(res, content_type)
 
     headers = format_headers(res)
 
-    return (body, statusCode, headers)
+    return (body, status, headers)
 
 
 @app.route(
