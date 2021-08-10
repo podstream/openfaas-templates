@@ -3,14 +3,12 @@ import hmac, hashlib
 
 def validate_hmac(message, secret, hash):
     received_hash = hash.lstrip("sha1=")
-
     expected_mac = hmac.new(secret.encode(), message.encode(), hashlib.sha1)
     created_hash = expected_mac.hexdigest()
-
     return received_hash == created_hash
 
 
-def raise_error(status, message):
+def format_error(status, message):
     return {"status": status, "errors": [message]}
 
 
@@ -19,7 +17,7 @@ def handle(event, context):
         with open("/var/openfaas/secrets/payload-secret", "r") as secret_content:
             payload_secret = secret_content.read()
     except FileNotFoundError:
-        raise_error(500, "Failed to read shared secret.")
+        return format_error(500, "Failed to read shared secret.")
     try:
         message = event.body.decode("UTF-8")
         message_mac = event.headers.get("Hmac")
@@ -31,6 +29,6 @@ def handle(event, context):
                 },
             }
         else:
-            raise_error(403, "HMAC validation failed.")
-    except:
-        raise_error(500, "Unknown error.")
+            return format_error(403, "HMAC validation failed.")
+    except Exception as e:
+        return format_error(500, e.__name__)
