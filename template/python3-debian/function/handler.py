@@ -1,11 +1,9 @@
-import os, hmac, hashlib
+import os
 
 
-def validate_hmac(message, secret, hash):
-    received_hash = hash.lstrip("sha1=")
-    expected_mac = hmac.new(secret.encode(), message.encode(), hashlib.sha1)
-    created_hash = expected_mac.hexdigest()
-    return received_hash == created_hash
+def validate_token(secret, auth_header):
+    auth_token = auth_header.split(" ")[1]
+    return secret == auth_token
 
 
 def handle(req):
@@ -16,10 +14,10 @@ def handle(req):
         return "Failed to read shared secret."
 
     try:
-        message_mac = os.getenv("Http_Hmac")
-        if validate_hmac(req, payload_secret, message_mac):
+        auth_header = os.getenv("Http_Authorization")
+        if validate_token(payload_secret, auth_header):
             return "Successfully validated: " + req
         else:
-            return "HMAC validation failed."
+            return "Token validation failed."
     except Exception as e:
         return e.__name__

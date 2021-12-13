@@ -1,11 +1,6 @@
-import hmac, hashlib
-
-
-def validate_hmac(message, secret, hash):
-    received_hash = hash.lstrip("sha1=")
-    expected_mac = hmac.new(secret.encode(), message.encode(), hashlib.sha1)
-    created_hash = expected_mac.hexdigest()
-    return received_hash == created_hash
+def validate_token(secret, auth_header):
+    auth_token = auth_header.split(" ")[1]
+    return secret == auth_token
 
 
 def format_error(status, message):
@@ -20,15 +15,15 @@ def handle(event, context):
         return format_error(500, "Failed to read shared secret.")
     try:
         message = event.body.decode("UTF-8")
-        message_mac = event.headers.get("Hmac")
-        if validate_hmac(message, payload_secret, message_mac):
+        auth_header = event.headers.get("Authorization")
+        if validate_token(payload_secret, auth_header):
             return {
                 "status": 200,
                 "body": {
-                    "message": "HMAC validation successful. You said: " + message,
+                    "message": "Token validation successful. You said: " + message,
                 },
             }
         else:
-            return format_error(403, "HMAC validation failed.")
+            return format_error(403, "Token validation failed.")
     except Exception as e:
         return format_error(500, e.__name__)
